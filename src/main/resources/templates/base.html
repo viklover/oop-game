@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(title, content)">
+<head>
+  <meta charset="UTF-8">
+  <title th:title="${title}"></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="head">
+    <div class="content">
+      <h3>My OOP game</h3>
+    </div>
+  </header>
+  <div class="content">
+    <div th:replace="${content}"></div>
+  </div>
+</body>
+</html>

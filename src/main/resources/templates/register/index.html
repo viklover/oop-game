@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" th:replace="base::layout(Register, ~{::body})">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+</head>
+<body>
+  <h2>Register page</h2>
+  <form method="POST">
+    <label for="user">User</label><br>
+    <input name="user" type="text" id="user"><br>
+    <label for="user">Password</label><br>
+    <input name="password" type="password" id="password"><br>
+    <input type="submit" value="Зарегистрироваться">
+  </form>
+  <p>Уже есть аккаунт? Авторизуйтесь в этом <a href="/login">разделе</a> сайта</p>
+</body>
+</html>

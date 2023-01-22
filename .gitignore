@@ -37,3 +37,9 @@ out/
 .vscode/
 
 src/main/resources/application.properties
+
+### Sass ###
+.sass-cache/
+*.css.map
+*.sass.map
+*.scss.map

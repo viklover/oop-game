@@ -1,0 +1,23 @@
+@font-face {
+  font-family: "Roboto";
+  src: url("/fonts/Roboto-Regular.ttf");
+}
+body {
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+}
+
+.head {
+  padding: 5px 0;
+  background-color: black;
+}
+.head h3 {
+  color: white;
+}
+
+.content {
+  width: 600px;
+  margin: 20px auto 0;
+}
+
+/*# sourceMappingURL=style.css.map */
