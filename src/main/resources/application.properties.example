@@ -1,3 +1,7 @@
 spring.datasource.url=jdbc:postgresql://localhost:5432/oop-game
 spring.datasource.username=postgres
 spring.datasource.password=1ab312c
+spring.thymeleaf.cache=true
+
+jwt.secret=ujSVP8ucJjedib9sMevPC2z6vPcspe8KM/hcni6VT2rrTIQrhKiwoeokPtEX3OxcnzeA2IjBhYoILRdOnUTfVLdz+pChtdIaRb23hA6/c6S/lznvCgg787Yo/NpQ5jewUiNa0yqUQ5/0/TxfV0A6UYI1Mc0P/EtXZXl7pPgRWaX/WSM3xNtw08XtvRbkLDhjjogkERtHGpUYDaHmxDvoYyN1wxfmvxmSOo964FUgi/RHdxiI4HivBznrBRwZv6liTTnF45WbCLdeI4pmRfitgv1jmFNMQhAZvjd2ubVZzDW0XoO1MdHXjCoyA/J5fXXYnpSFJHxf+c2OUQ6u2ZuBzA==
+jwt.expiration=60

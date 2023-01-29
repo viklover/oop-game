@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import ru.viklover.oopgame.security.jwt.JwtTokenFilter;
 import ru.viklover.oopgame.security.jwt.JwtUtils;
 import ru.viklover.oopgame.security.user.UserDetailsService;
+import ru.viklover.oopgame.user.UserService;
 
 @Configuration
 @EnableWebSecurity
@@ -34,8 +35,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtTokenFilter authenticationJwtTokenFilter() {
-        return new JwtTokenFilter(new JwtUtils(), new UserDetailsService());
+    public JwtTokenFilter authenticationJwtTokenFilter(JwtUtils jwtUtils, UserService userService) {
+        return new JwtTokenFilter(jwtUtils, new UserDetailsService(userService));
     }
 
     @Bean
@@ -45,9 +46,13 @@ public class SecurityConfig {
 
     @Bean
     @SneakyThrows
-    public SecurityFilterChain filterChain(HttpSecurity http) {
-        http = http.formLogin().disable().csrf().disable();
-        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtTokenFilter jwtTokenFilter) {
+        http = http.formLogin().disable().csrf().disable().logout().disable();
+
+        http = http.logout(logout ->
+                logout.logoutUrl("/logout").logoutSuccessUrl("/").deleteCookies("auth_token"));
+
+        http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

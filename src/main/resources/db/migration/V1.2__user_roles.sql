@@ -13,4 +13,4 @@ create table users_roles
     foreign key (role_id) references roles (id) on delete cascade
 );
 
-insert into roles (name) values ('user'), ('admin');
+insert into roles (name) values ('ROLE_USER'), ('ROLE_ADMIN');

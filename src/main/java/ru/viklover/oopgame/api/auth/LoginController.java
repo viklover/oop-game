@@ -2,27 +2,28 @@ package ru.viklover.oopgame.api.auth;
 
 import lombok.AllArgsConstructor;
 
-import org.springframework.http.ResponseEntity;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import ru.viklover.oopgame.user.UserService;
 import ru.viklover.oopgame.api.forms.LoginForm;
-import ru.viklover.oopgame.response.JwtResponse;
 import ru.viklover.oopgame.security.jwt.JwtUtils;
-import ru.viklover.oopgame.user.UserRepository;
-import ru.viklover.oopgame.user.role.UserRole;
-
+import ru.viklover.oopgame.security.annotations.AnonymousUser;
 
 @Controller
 @RequestMapping("/login")
 @CrossOrigin
 @AllArgsConstructor
+@AnonymousUser
 public class LoginController {
 
-    public UserRepository userRepository;
+    public UserService userService;
 
     public JwtUtils jwtUtils;
 
@@ -32,28 +33,23 @@ public class LoginController {
     }
 
     @PostMapping
-    public ResponseEntity<?> login(LoginForm loginForm) {
+    public String login(LoginForm loginForm, HttpServletResponse response) {
 
-        if (!userRepository.checkUserExistingByUsername(loginForm.getUsername())) {
-            return ResponseEntity.notFound().build();
+        var userOptional = userService.validateLoginForm(loginForm);
+
+        if (userOptional.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return "redirect:/login";
         }
 
-        if (!userRepository.validatePassword(loginForm)) {
-            return ResponseEntity.badRequest().build();
-        }
+        var user = userOptional.get();
 
-        var user = userRepository.findByUsername(loginForm.getUsername()).get();
-        var jwt = jwtUtils.generateJwtToken(user);
+        var cookie = new Cookie("auth_token", jwtUtils.generateJwtToken(user));
+        cookie.setMaxAge((int) jwtUtils.getJwtExpirationSeconds());
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
+        response.setStatus(HttpServletResponse.SC_SEE_OTHER);
 
-        System.out.println("hello");
-        System.out.println(jwt);
-
-        return ResponseEntity.ok(new JwtResponse(
-                jwt,
-                "Bearer ",
-                user.getId(),
-                user.getUsername(),
-                user.getRoles().stream().map(UserRole::getName).toList()
-        ));
+        return "redirect:/";
     }
 }

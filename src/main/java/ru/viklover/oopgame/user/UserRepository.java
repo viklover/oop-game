@@ -7,9 +7,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Repository;
 
-import ru.viklover.oopgame.api.forms.LoginForm;
-import ru.viklover.oopgame.api.forms.RegisterForm;
-import ru.viklover.oopgame.user.exception.UserNotFoundException;
 import ru.viklover.oopgame.user.role.UserRole;
 
 import java.util.*;
@@ -20,18 +17,7 @@ public class UserRepository {
 
     public JdbcTemplate jdbcTemplate;
 
-    public boolean checkUserExistingByUsername(String username) {
-        return jdbcTemplate.queryForObject(
-                "select exists(select * from users where username = ?)",
-                Boolean.class, username
-        );
-    }
-
-    public Optional<User> create(RegisterForm registerForm) {
-
-        if (!registerForm.getPassword().equals(registerForm.getRepeatedPassword()) ||
-            checkUserExistingByUsername(registerForm.getUsername()))
-            return Optional.empty();
+    public User create(String username, String password) {
 
         var keyHolder = new GeneratedKeyHolder();
 
@@ -43,7 +29,7 @@ public class UserRepository {
             );
 
             var preparedStatementSetter = new ArgumentPreparedStatementSetter(new Object[]{
-                    registerForm.getUsername(), BCrypt.hashpw(registerForm.getPassword(), BCrypt.gensalt())
+                    username, BCrypt.hashpw(password, BCrypt.gensalt())
             });
             preparedStatementSetter.setValues(statement);
 
@@ -54,14 +40,9 @@ public class UserRepository {
         return findById((Long) keyHolder.getKey());
     }
 
-    public Optional<User> findById(Long id) {
+    public User findById(Long id) {
 
-        var listOfMaps = jdbcTemplate.queryForList("select * from users where id = ?", id);
-
-        if (listOfMaps.isEmpty())
-            throw new UserNotFoundException(id);
-
-        var userMap = listOfMaps.get(0);
+        var userMap = jdbcTemplate.queryForMap("select * from users where id = ?", id);
 
         var user = new User();
         user.setId((Long) userMap.get("id"));
@@ -69,14 +50,12 @@ public class UserRepository {
         user.setPasswordHash((String) userMap.get("password_hash"));
         user.setRoles(findUserRolesById(id));
 
-        return Optional.of(user);
+        return user;
     }
 
-    public Optional<User> findByUsername(String username) {
+    public User findByUsername(String username) {
 
-        var listOfMaps = jdbcTemplate.queryForList("select * from users where username = ?", username);
-
-        var userMap = listOfMaps.get(0);
+        var userMap = jdbcTemplate.queryForMap("select * from users where username = ?", username);
 
         var user = new User();
         user.setId((Long) userMap.get("id"));
@@ -84,29 +63,36 @@ public class UserRepository {
         user.setPasswordHash((String) userMap.get("password_hash"));
         user.setRoles(findUserRolesById((Long) userMap.get("id")));
 
-        return Optional.of(user);
-    }
-
-    public boolean validatePassword(LoginForm loginForm) {
-
-        var userOptional = findByUsername(loginForm.getUsername());
-
-        if (userOptional.isEmpty())
-            throw new UserNotFoundException(1L);
-
-        return BCrypt.checkpw(loginForm.getPassword(), userOptional.get().getPasswordHash());
+        return user;
     }
 
     public Set<UserRole> findUserRolesById(Long id) {
 
         var listOfRoles = jdbcTemplate.queryForList(
-                "select r.id, r.name from users_roles u inner join roles r on r.id = u.role_id where u.user_id = ?",
+                "select r.id as id, r.name as name from users_roles u inner join roles r on r.id = u.role_id where u.user_id = ?",
                 id
         );
 
         var hashSet = new HashSet<UserRole>();
-        listOfRoles.forEach(map -> hashSet.add(new UserRole((Long) map.get("id"), (String) map.get("name"))));
+        listOfRoles.forEach(map ->
+            hashSet.add(new UserRole((Integer) map.get("id"), (String) map.get("name")))
+        );
 
         return hashSet;
+    }
+
+
+    public boolean checkExistingById(Long id) {
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(
+                "select exists(select * from users where id = ?)",
+                Boolean.class, id
+        ));
+    }
+
+    public boolean checkExistingByUsername(String username) {
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(
+                "select exists(select * from users where username = ?)",
+                Boolean.class, username
+        ));
     }
 }

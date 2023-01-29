@@ -5,6 +5,14 @@
   <title>Home</title>
 </head>
   <body>
-
+  <p>
+    <b>Username: </b>
+    <span th:if="${is_logged}" th:text="${username}"></span>
+    <span th:unless="${is_logged}">Anonymous</span><br>
+    <p>
+      <a th:if="${is_logged}" href="/logout">Выйти из аккаунта</a>
+      <a th:unless="${is_logged}" href="/login">Войти в аккаунт</a>
+    </p>
+  </p>
   </body>
 </html>

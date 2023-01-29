@@ -1,42 +1,41 @@
 package ru.viklover.oopgame.api.auth;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
 import ru.viklover.oopgame.api.forms.RegisterForm;
-import ru.viklover.oopgame.user.UserRepository;
+import ru.viklover.oopgame.security.annotations.AnonymousUser;
+import ru.viklover.oopgame.user.UserService;
 
 @Controller
 @RequestMapping("/register")
 @CrossOrigin
 @AllArgsConstructor
+@AnonymousUser
 public class RegisterController {
 
-    public UserRepository userRepository;
+    public UserService userService;
 
     @GetMapping
-    public String registerPage(HttpServletRequest request) {
-
-        if (request.isRequestedSessionIdValid()) {
-            return "redirect:/";
-        }
-
+    public String registerPage() {
         return "register/index";
     }
 
     @PostMapping
-    public String register(HttpServletRequest request,
+    public String register(HttpServletResponse response,
                            RegisterForm registerForm) {
 
-        if (request.isUserInRole("user")) {
-            return "redirect:/";
+        if (userService.create(registerForm).isPresent()) {
+            response.setStatus(HttpServletResponse.SC_SEE_OTHER);
+            return "redirect:/login";
         }
 
-        if (userRepository.create(registerForm).isEmpty())
-            return "register/index";
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
-        return "redirect:/login";
+        return "register/index";
     }
 }

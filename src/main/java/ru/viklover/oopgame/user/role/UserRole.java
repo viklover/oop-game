@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class UserRole {
-    private Long id;
+    private Integer id;
     private String name;
 }
