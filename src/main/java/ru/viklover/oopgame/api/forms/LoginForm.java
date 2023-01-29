@@ -1,9 +1,9 @@
-package ru.viklover.oopgame.forms;
+package ru.viklover.oopgame.api.forms;
 
 import lombok.Data;
 
 @Data
 public class LoginForm {
-    public String user;
+    public String username;
     public String password;
 }
