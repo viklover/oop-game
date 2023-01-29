@@ -7,8 +7,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Repository;
 
-import ru.viklover.oopgame.user.role.UserRole;
-
 import java.util.*;
 
 @Repository

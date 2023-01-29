@@ -4,8 +4,6 @@ import lombok.Data;
 
 import java.util.Set;
 
-import ru.viklover.oopgame.user.role.UserRole;
-
 @Data
 public class User {
     private Long id;

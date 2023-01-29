@@ -1,4 +1,4 @@
-package ru.viklover.oopgame.user.role;
+package ru.viklover.oopgame.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

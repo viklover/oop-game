@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import ru.viklover.oopgame.user.UserService;
-import ru.viklover.oopgame.api.forms.LoginForm;
+import ru.viklover.oopgame.api.auth.form.LoginForm;
 import ru.viklover.oopgame.security.jwt.JwtUtils;
-import ru.viklover.oopgame.security.annotations.AnonymousUser;
+import ru.viklover.oopgame.security.annotation.AnonymousUser;
 
 @Controller
 @RequestMapping("/login")

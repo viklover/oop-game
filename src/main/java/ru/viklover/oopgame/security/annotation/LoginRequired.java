@@ -1,4 +1,4 @@
-package ru.viklover.oopgame.security.annotations;
+package ru.viklover.oopgame.security.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.RetentionPolicy;

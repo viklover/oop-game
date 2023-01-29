@@ -7,8 +7,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import ru.viklover.oopgame.api.forms.RegisterForm;
-import ru.viklover.oopgame.security.annotations.AnonymousUser;
+import ru.viklover.oopgame.api.auth.form.RegisterForm;
+import ru.viklover.oopgame.security.annotation.AnonymousUser;
 import ru.viklover.oopgame.user.UserService;
 
 @Controller

@@ -6,9 +6,8 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.viklover.oopgame.api.forms.LoginForm;
-import ru.viklover.oopgame.api.forms.RegisterForm;
-import ru.viklover.oopgame.user.exception.UserNotFoundException;
+import ru.viklover.oopgame.api.auth.form.LoginForm;
+import ru.viklover.oopgame.api.auth.form.RegisterForm;
 
 import java.util.Optional;
 

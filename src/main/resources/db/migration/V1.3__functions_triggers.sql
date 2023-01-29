@@ -1,11 +1,11 @@
 
-CREATE OR REPLACE FUNCTION default_values()
-    RETURNS TRIGGER AS $$
-BEGIN
-    INSERT INTO users_roles (user_id, role_id) VALUES (NEW.id, 1);
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+create or replace function default_values()
+    returns trigger as $$
+begin
+    insert into users_roles (user_id, role_id) values (NEW.id, 1);
+    return NEW;
+end;
+$$ language plpgsql;
 
-CREATE TRIGGER default_values AFTER INSERT ON users
-    FOR EACH ROW EXECUTE PROCEDURE default_values();
+create trigger default_values after insert on users
+    for each row execute procedure default_values();

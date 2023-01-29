@@ -1,4 +1,4 @@
-package ru.viklover.oopgame.api.forms;
+package ru.viklover.oopgame.api.auth.form;
 
 import lombok.Data;
 
